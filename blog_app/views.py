@@ -3,30 +3,27 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import auth, User
 from django.contrib import messages
 
-from .models import BlogPost
-from .forms import BlogForm
+from .models import BlogPost, LoginModel
+from .forms import BlogForm, RegisterForm 
 # Create your views here.
 
 
 def register(request):
     if request.method=="POST":
 
-        username=request.POST.get('username', ' ')
-        email=request.POST.get('email', ' ')
-        password_1=request.POST.get('password1', ' ')
-        password_2=request.POST.get('password2', ' ')
+        register_form=RegisterForm(request.POST)
         
-        if password_1 == password_2:
-            if len(password_1) > 10 and len(password_2) > 10:
+        if register_form.password_1 == register_form.password_2:
+            if len(register_form.password_1) > 10 and len(register_form.password_2) > 10:
 
-                if User.objects.filter(username=username).exists():
-                    messages.info(request, f"This username {username} is already in use!")
+                if User.objects.filter(username=register_form.username).exists():
+                    messages.info(request, f"This username {register_form.username} is already in use!")
                     return redirect('register')
-                elif User.objects.filter(email=email).exists():
-                    messages.info(request, f"The email {email} is already in use!")
+                elif User.objects.filter(email=register_form.email).exists():
+                    messages.info(request, f"The email {register_form.email} is already in use!")
                     return redirect('register')
                 else:
-                    user=User.objects.create_user(username=username, email=email, password=password_1)
+                    user=User.objects.create_user(username=register_form.username, email=register_form.email, password=register_form.password_1)
                     user.save();
 
                     #TO DO: Create email notification logic
@@ -39,33 +36,29 @@ def register(request):
         else:
             messages.info(request, "These passwords are not the same!")
             return redirect('register')
-    
-    return render(request, 'register.html')
+    else:
+        register_form=RegisterForm()
+        return render(request, 'register.html', {"register_form":register_form})
 
 
 def login(request):
     if request.method=="POST":
-        username=request.POST.get("username", ' ')
-        password=request.POST.get("password", ' ')
-        is_authenticated=bool
+        Login_form=LoginModel(request.POST)
 
-        user=auth.authenticate(username=username, password=password)
-        
-        if user is not None:
+        if Login_form.is_valid():
+
+            auth.login(request, Login_form.cleaned_data['user'])
+            username=Login_form.cleaned_data["username"]
             
-            context={
-                'username':username,
-                is_authenticated:True,
-            }
-
-            auth.login(request, user)
-            return render(request, 'index.html', context)
+            return render(request, 'index.html', {'username':username})
         
         else:
             messages.info(request, 'Your credentials are incorrect!')
             return redirect('login')
 
     return render (request, "login.html")
+
+
 
 
 def index(request):
@@ -89,7 +82,7 @@ def user_post(request):
                 return redirect('index')
         else:
             messages.info(request, 'The blog post is not valid!')
-            return redirect("user's_post")
+            return redirect("users_post")
     else:
         form=BlogForm()
-        return render(request, "user's_post.html", {"form":form})
+        return render(request, "users_post.html", {"form":form})

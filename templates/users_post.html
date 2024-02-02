@@ -1,0 +1,28 @@
+{% extends 'structure.html' %}
+{% block content %}
+<body>
+
+<div class="header">
+  <h2>Post A Blog!</h2>
+</div>
+
+<div class="row">
+  <div class="leftcolumn">
+
+    <div class="card">
+      {% for message in messages %}
+      <p style="color: red;"> <i> {{ message }} </i> </p>
+      {% endfor %}
+
+      <form action="{% url 'user's_post %}" method="POST">
+        {{ form.as_p }}
+        <button type="submit">Post Blog</button>
+      </form>
+
+    </div>
+    
+  </div>
+</div>
+
+</body>
+{% endblock %}
