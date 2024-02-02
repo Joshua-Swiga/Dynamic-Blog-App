@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial;
+  padding: 20px;
+  background: #f1f1f1;
+}
+
+.header {
+  padding: 2px;
+  font-size: 40px;
+  text-align: center;
+  background: white;
+}
+
+.leftcolumn {
+  margin: auto; /* Center the column */
+  width: 50%; /* Adjust the width as needed */
+  padding: 20px;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center; /* Center the content within the card */
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (max-width: 800px) {
+  .leftcolumn, .rightcolumn {   
+    width: 100%;
+    padding: 0;
+  }
+}
+</style>
+
+
+</head>
+<body>
+
+<div class="header">
+  <h2>Posts Page</h2>
+</div>
+
+<div class="row">
+  <div class="leftcolumn">
+
+    <div class="card">
+      {{ ind_post.date }}
+      <br>
+      {{ ind_post.title }}
+      <br><hr>
+      {{ ind_post.body }}
+    </div>
+    
+  </div>
+</div>
+
+</body>
+</html>
