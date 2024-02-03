@@ -11,6 +11,9 @@ class BlogForm(forms.ModelForm):
 
 
 class RegisterForm(forms.ModelForm):
+    
+    password_1=forms.CharField(widget=forms.PasswordInput)
+    password_2=forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
         model=RegisterModel

@@ -5,40 +5,51 @@ from django.contrib import messages
 
 from .models import BlogPost, LoginModel
 from .forms import BlogForm, RegisterForm 
+
+import sys
 # Create your views here.
 
-
 def register(request):
-    if request.method=="POST":
+    if request.method == "POST":
+        # Open the file for logging errors
+        sys.stdout = open("Error_file.txt", 'w', encoding='utf-8')
 
-        register_form=RegisterForm(request.POST)
-        
-        if register_form.password_1 == register_form.password_2:
-            if len(register_form.password_1) > 10 and len(register_form.password_2) > 10:
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            username = register_form.cleaned_data.get('username'," ")
+            email = register_form.cleaned_data.get('email', " ")
+            password_1 = register_form.cleaned_data.get('password_1', " ")
+            password_2 = register_form.cleaned_data.get('password_2', " ")
+            print("Validation 1 working")
 
-                if User.objects.filter(username=register_form.username).exists():
-                    messages.info(request, f"This username {register_form.username} is already in use!")
+            if password_1 == password_2 and len(password_1) > 10:
+                if User.objects.filter(username=username).exists():
+                    messages.info(request, f"This username {username} is already in use!")
                     return redirect('register')
-                elif User.objects.filter(email=register_form.email).exists():
-                    messages.info(request, f"The email {register_form.email} is already in use!")
+                elif User.objects.filter(email=email).exists():
+                    messages.info(request, f"The email {email} is already in use!")
                     return redirect('register')
                 else:
-                    user=User.objects.create_user(username=register_form.username, email=register_form.email, password=register_form.password_1)
-                    user.save();
-
-                    #TO DO: Create email notification logic
-
-                    return redirect('login')
-
+                    try:
+                        user = User.objects.create_user(username=username, email=email, password=password_1)
+                        user.save()
+                        # TO DO: Create email notification logic
+                        return redirect('login')
+                    except Exception as e:
+                        messages.error(request, f'An error occurred: {e}')
+                        print("Error creating user:", e)
+                        return redirect('register')
             else:
-                messages.info(request, 'This Password is too short')
+                messages.info(request, 'Passwords must match and be at least 10 characters long')
                 return redirect('register')
         else:
-            messages.info(request, "These passwords are not the same!")
+            messages.info(request, "Form validation failed")
+            print("Form validation failed")
             return redirect('register')
     else:
-        register_form=RegisterForm()
-        return render(request, 'register.html', {"register_form":register_form})
+        register_form = RegisterForm()
+        return render(request, 'register.html', {"register_form": register_form})
+    
 
 
 def login(request):
@@ -57,8 +68,6 @@ def login(request):
             return redirect('login')
 
     return render (request, "login.html")
-
-
 
 
 def index(request):

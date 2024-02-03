@@ -21,20 +21,6 @@ from blog_app import urls, views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     path('', include("blog_app.urls")),
-    path('', views.index, name='index'),
-
-    path("user'_post/", include("blog_app.urls")),
-    path("user's_post.html", views.user_post, name='user_post'),
-
-    path("register/", include("blog_app.urls")),
-    path("register.html", views.register, name='register'),
-
-    path("login/", include("blog_app.urls")),
-    path("login.html", views.login, name='login'),
-
-    path("post/", include("blog_app.urls")),
-    path("posts.html", views.post, name='post'),
-
+    
 ]
