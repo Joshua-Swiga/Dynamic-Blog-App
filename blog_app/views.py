@@ -9,11 +9,13 @@ from .forms import BlogForm, RegisterForm
 import sys
 # Create your views here.
 
+# Open the file for logging errors
+sys.stdout = open("log_file.txt", 'a', encoding='utf-8')
+
+
 def register(request):
     if request.method == "POST":
-        # Open the file for logging errors
-        sys.stdout = open("Error_file.txt", 'w', encoding='utf-8')
-
+       
         register_form = RegisterForm(request.POST)
         if register_form.is_valid():
             username = register_form.cleaned_data.get('username'," ")

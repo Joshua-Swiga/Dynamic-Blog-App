@@ -12,11 +12,12 @@
     <div class="card">
       {% for post in index_posts %}
       <a href="{% url 'post' post.id %}" style="color: black;">
-        {{ post.date }}
-        <br>
-        {{ post.title }}
+        <i>{{ post.date }}</i>
+        <br><br>
+        <b>{{ post.title }}</b>
+        <br><br>
+        {{ post.body|truncatewords:10 }}
         <br><hr>
-        {{ post.body }}
       </a>
       {% endfor %}
     </div>

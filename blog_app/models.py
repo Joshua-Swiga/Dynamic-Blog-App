@@ -7,7 +7,7 @@ class BlogPost(models.Model):
     body=models.TextField()
 
     def __str__(self) -> str:
-        return "{self.title}"
+        return f"{self.title}"
 
 
 class RegisterModel(models.Model):

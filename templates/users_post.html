@@ -14,7 +14,8 @@
       <p style="color: red;"> <i> {{ message }} </i> </p>
       {% endfor %}
 
-      <form action="{% url 'user's_post %}" method="POST">
+      <form method="POST" action="{% url 'user_post' %}">
+        {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Post Blog</button>
       </form>
